@@ -6,17 +6,13 @@ const nodemailer = require("nodemailer");
 
 const app = express();
 
+require("dotenv").config();
+
+
 /* ✅ Middleware (FIXED) */
 app.use(express.json());
 
-app.use(cors({
-  origin: [
-    "http://localhost:3000",
-    "https://troylemons.netlify.app"
-  ],
-  methods: ["GET", "POST", "OPTIONS"],
-  allowedHeaders: ["Content-Type"],
-}));
+app.use(cors());
 
 /* Health check */
 app.get("/", (req, res) => {
