@@ -8,7 +8,7 @@ const app = express();
 
 const allowedOrigins = [
     "http://localhost:3000",
-    "netlify.troylemons.app"
+    "troylemons.netlify.app"
   ];
   
   app.use(cors({
