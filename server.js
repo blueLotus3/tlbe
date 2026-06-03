@@ -41,7 +41,7 @@ const transporter = nodemailer.createTransport({
     res.json({ status: "Backend is working" });
   });
 
-  app.post("/send-email", async (req, res) => {
+  app.post("https://tlbe.onrender.com/send-email", async (req, res) => {
     const { name, email, message } = req.body;
   
     console.log("📩 Incoming request:");
