@@ -12,18 +12,9 @@ const allowedOrigins = [
   ];
   
   app.use(cors({
-    origin: function (origin, callback) {
-      // allow requests with no origin (like Postman / server-to-server)
-      if (!origin) return callback(null, true);
-  
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-  
-      return callback(new Error("Blocked by CORS"));
-    },
+    origin: ["http://localhost:3000", "https://troylemons.netlify.app"],
     methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type"]
+    allowedHeaders: ["Content-Type"],
   }));
   
 
