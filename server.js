@@ -11,7 +11,6 @@ app.use(express.json());
 /* ✅ PRODUCTION CORS */
 app.use(cors({
   origin: [
-    "http://localhost:3000",
     "https://troylemons.netlify.app"
   ],
   methods: ["GET", "POST", "OPTIONS"],
