@@ -6,8 +6,6 @@ const nodemailer = require("nodemailer");
 
 const app = express();
 
-require("dotenv").config();
-
 
 /* ✅ Middleware (FIXED) */
 app.use(express.json());
@@ -29,9 +27,11 @@ app.get("/", (req, res) => {
 
 /* Email route */
 app.post("/send-email", async (req, res) => {
-  console.log("🔥 HIT SEND EMAIL ROUTE");
+  console.log("BODY RECEIVED:", req.body);
 
-  const { name, email, message } = req.body;
+  const name = req.body?.name || req.body?.formData?.name;
+  const email = req.body?.email || req.body?.formData?.email;
+  const message = req.body?.message || req.body?.formData?.message;
 
   if (!name || !email || !message) {
     return res.status(400).json({ error: "Missing fields" });
@@ -76,6 +76,10 @@ ${message}
 
 /* Start server */
 const PORT = process.env.PORT || 5000;
+
+app.use((req, res) => {
+  res.status(404).json({ error: "Route not found" });
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
