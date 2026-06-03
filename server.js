@@ -22,8 +22,6 @@ app.use(cors({
   credentials: false
 }));
 
-app.options("*", cors());
-
 /* Health check */
 app.get("/", (req, res) => {
   res.json({ status: "Backend is working" });
