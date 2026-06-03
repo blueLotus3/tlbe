@@ -44,6 +44,9 @@ const transporter = nodemailer.createTransport({
   app.post("/send-email", async (req, res) => {
     const { name, email, message } = req.body;
   
+    console.log("📩 Incoming request:");
+    console.log(name, email, message);
+  
     try {
       await transporter.sendMail({
         from: `"${name}" <${email}>`,
@@ -58,13 +61,22 @@ const transporter = nodemailer.createTransport({
         `,
       });
   
-      res.status(200).json({ success: true });
+      // IMPORTANT: always return response
+      return res.status(200).json({
+        success: true,
+        message: "Email sent successfully",
+      });
+  
     } catch (error) {
       console.error("EMAIL ERROR:", error);
-      res.status(500).json({ success: false });
+  
+      // IMPORTANT: always return response
+      return res.status(500).json({
+        success: false,
+        message: "Email failed to send",
+      });
     }
   });
-
   const PORT = process.env.PORT || 5000;
 
   app.listen(PORT, () => {
