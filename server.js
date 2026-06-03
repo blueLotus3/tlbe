@@ -27,50 +27,31 @@ app.get("/", (req, res) => {
 
 /* Email route */
 app.post("/send-email", async (req, res) => {
-  console.log("BODY RECEIVED:", req.body);
-
-  const name = req.body?.name || req.body?.formData?.name;
-  const email = req.body?.email || req.body?.formData?.email;
-  const message = req.body?.message || req.body?.formData?.message;
-
-  if (!name || !email || !message) {
-    return res.status(400).json({ error: "Missing fields" });
-  }
+  console.log("🔥 POST HIT");
+  console.log("BODY:", req.body);
 
   try {
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS, // Gmail App Password
-      },
-    });
+    const name = req.body?.name;
+    const email = req.body?.email;
+    const message = req.body?.message;
+
+    if (!name || !email || !message) {
+      return res.status(400).json({ error: "Missing fields" });
+    }
 
     await transporter.sendMail({
-      from: `"${name}" <${process.env.EMAIL_USER}>`,
+      from: process.env.EMAIL_USER,
       to: process.env.EMAIL_USER,
       replyTo: email,
       subject: "New Contact Message",
-      text: `
-Name: ${name}
-Email: ${email}
-
-Message:
-${message}
-      `,
+      text: `${name}\n${email}\n\n${message}`,
     });
 
-    return res.status(200).json({
-      success: true,
-      message: "Email sent successfully",
-    });
+    return res.json({ success: true });
 
   } catch (err) {
-    console.error("EMAIL ERROR:", err);
-    return res.status(500).json({
-      success: false,
-      message: "Failed to send email",
-    });
+    console.log("SEND ERROR:", err);
+    return res.status(500).json({ error: err.message });
   }
 });
 
