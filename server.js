@@ -6,11 +6,12 @@ const nodemailer = require("nodemailer");
 
 const app = express();
 
+/* ✅ Middleware (FIXED) */
 app.use(express.json());
 
-/* ✅ PRODUCTION CORS */
 app.use(cors({
   origin: [
+    "http://localhost:3000",
     "https://troylemons.netlify.app"
   ],
   methods: ["GET", "POST", "OPTIONS"],
@@ -25,7 +26,7 @@ app.get("/", (req, res) => {
 /* Email route */
 app.post("/send-email", async (req, res) => {
   console.log("🔥 HIT SEND EMAIL ROUTE");
-  
+
   const { name, email, message } = req.body;
 
   if (!name || !email || !message) {
@@ -34,12 +35,10 @@ app.post("/send-email", async (req, res) => {
 
   try {
     const transporter = nodemailer.createTransport({
-      service: "smtp.gmail.com",
-      port: 465,
-      secure: true,
+      service: "gmail",
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        pass: process.env.EMAIL_PASS, // Gmail App Password
       },
     });
 
@@ -71,8 +70,9 @@ ${message}
   }
 });
 
-/* Port fix for Render */
+/* Start server */
 const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
