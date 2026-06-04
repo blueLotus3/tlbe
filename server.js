@@ -6,8 +6,7 @@ const nodemailer = require("nodemailer");
 
 const app = express();
 
-
-/* ✅ Middleware (FIXED) */
+/* ✅ Middleware */
 app.use(express.json());
 
 app.use(cors({
@@ -19,6 +18,15 @@ app.use(cors({
   allowedHeaders: ["Content-Type"],
   credentials: false
 }));
+
+/* ✅ CREATE TRANSPORTER (FIXED) */
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
 /* Health check */
 app.get("/", (req, res) => {
@@ -40,7 +48,7 @@ app.post("/send-email", async (req, res) => {
     }
 
     await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+      from: `"${name}" <${process.env.EMAIL_USER}>`,
       to: process.env.EMAIL_USER,
       replyTo: email,
       subject: "New Contact Message",
@@ -55,12 +63,13 @@ app.post("/send-email", async (req, res) => {
   }
 });
 
-/* Start server */
-const PORT = process.env.PORT || 5000;
-
+/* 404 fallback */
 app.use((req, res) => {
   res.status(404).json({ error: "Route not found" });
 });
+
+/* Start server */
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
